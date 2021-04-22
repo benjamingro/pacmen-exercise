@@ -3,6 +3,8 @@ const pacArray = [
   ["./images/PacMan1.png", "./images/PacMan2.png"],
   ["./images/PacMan3.png", "./images/PacMan4.png"],
 ];
+
+
 var direction = 0;
 const pacMen = [];
 
@@ -17,7 +19,7 @@ function makePac() {
   // returns an object with values scaled {x: 33, y: 21}
   let velocity = setToRandom(10);
   let position = setToRandom(200);
-  
+  let open = false; // this is for storing state open / close for pacman's mouth 
   // Add image to div id = game
   let game = document.getElementById("game");
   let newimg = document.createElement("img");
@@ -32,6 +34,7 @@ function makePac() {
     position,
     velocity,
     newimg,
+    open
   };
 }
 
@@ -44,9 +47,28 @@ function update() {
 
     item.newimg.style.left = item.position.x;
     item.newimg.style.top = item.position.y;
+
+    item.open = !item.open; 
+    if(item.open && item.velocity.x > 0)
+    {
+      item.newimg.src = pacArray[0][0]; 
+    }
+    else if(!item.open && item.velocity.x > 0)
+    {
+      item.newimg.src = pacArray[0][1];
+    }
+    else if(item.open && item.velocity.x <= 0)
+    {
+      item.newimg.src = pacArray[1][0];
+    }
+    else if(!item.open && item.velocity.x <= 0)
+    {
+      item.newimg.src = pacArray[1][1];
+    }
   });
   setTimeout(update, 20);
 }
+
 
 function checkCollisions(item) {
   if (
